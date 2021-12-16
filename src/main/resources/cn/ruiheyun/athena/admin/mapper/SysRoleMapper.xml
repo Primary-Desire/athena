@@ -2,4 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ruiheyun.athena.admin.mapper.SysRoleMapper">
 
+    <select id="listByUserSn" resultType="cn.ruiheyun.athena.admin.entity.SysRole">
+        SELECT sr.*
+        FROM sys_role sr
+            LEFT JOIN sys_user_role_relation surr
+                ON surr.role_sn = sr.sn
+        WHERE surr.user_sn = #{userSn}
+    </select>
+
 </mapper>

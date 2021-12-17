@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 public class CustomReactiveAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> mono, AuthorizationContext authorizationContext) {
+        String path = authorizationContext.getExchange().getRequest().getURI().getPath();
         return null;
     }
 }

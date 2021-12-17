@@ -1,4 +1,4 @@
-package cn.ruiheyun.athena.util;
+package cn.ruiheyun.athena.common.util;
 
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 

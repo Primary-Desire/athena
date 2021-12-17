@@ -17,3 +17,9 @@ jwt:
   secret: TGF1SG9uYmFu
   expiration: 3600
   header: Bearer
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0

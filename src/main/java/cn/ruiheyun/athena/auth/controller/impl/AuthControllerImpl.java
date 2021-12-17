@@ -19,7 +19,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.util.Objects;
 
@@ -40,11 +39,6 @@ public class AuthControllerImpl implements IAuthController {
     @Override
     @RequestMapping(value = {"/getPublicKey"}, method = {RequestMethod.GET})
     public Object getPublicKey() {
-        if (!stringRedisUtils.exist(RSAUtils.PUBLIC_KEY) || !stringRedisUtils.exist(RSAUtils.PRIVATE_KEY)) {
-            KeyPair keyPair = RSAUtils.getKeyPair();
-            stringRedisUtils.set(RSAUtils.PUBLIC_KEY, RSAUtils.getPublicKey(keyPair));
-            stringRedisUtils.set(RSAUtils.PRIVATE_KEY, RSAUtils.getPrivateKey(keyPair));
-        }
         return Mono.just(stringRedisUtils.get(RSAUtils.PUBLIC_KEY))
                 .map(publicKey -> JsonResult.success("获取成功", publicKey))
                 .onErrorResume(throwable -> Mono.empty())

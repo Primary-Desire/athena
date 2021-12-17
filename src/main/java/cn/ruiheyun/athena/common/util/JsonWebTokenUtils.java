@@ -67,11 +67,10 @@ public class JsonWebTokenUtils {
         return subject;
     }
 
-    public boolean verificationToken(String token, String ip, UserDetails userDetails) {
+    public boolean verificationToken(String token, String ip) {
         Claims claims = getClaimsForToken(token);
-        String username = claims.getSubject();
         String tokenIp = claims.get(CLAIM_KEY_IP, String.class);
-        return username.equals(userDetails.getUsername()) && tokenIp.equals(ip) && !isExpire(token);
+        return tokenIp.equals(ip) && !isExpire(token);
     }
 
     private boolean isExpire(String token) {

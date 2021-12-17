@@ -9,6 +9,7 @@ import cn.ruiheyun.athena.common.util.JsonWebTokenUtils;
 import cn.ruiheyun.athena.common.util.RSAUtils;
 import cn.ruiheyun.athena.common.util.StringRedisUtils;
 import com.alibaba.fastjson.JSONObject;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +61,11 @@ public class AuthControllerImpl implements IAuthController {
         return sysUserService.findByUsername(sysUser.getUsername())
                 .filter(userDetails -> passwordEncoder.matches(sysUser.getPassword(), userDetails.getPassword()))
                 .map(userDetails -> jsonWebTokenUtils.generateToken(userDetails, CommonUtils.getRealIpAddress(exchange)))
-                .map(token -> JsonResult.success("登录成功", token))
+                .doOnNext(token -> {
+                    Claims claims = jsonWebTokenUtils.getClaimsForToken(token);
+                    String ip = claims.get(JsonWebTokenUtils.CLAIM_KEY_IP, String.class);
+                    sysUserService.updateLastLoginInfo(claims.getSubject(), ip);
+                }).map(token -> JsonResult.success("登录成功", token))
                 .onErrorResume(throwable -> Mono.empty())
                 .switchIfEmpty(Mono.just(JsonResult.failed("登录失败")));
     }
@@ -73,6 +78,8 @@ public class AuthControllerImpl implements IAuthController {
         PrivateKey privateKey = RSAUtils.base64ToPrivateKey(stringRedisUtils.get(RSAUtils.PRIVATE_KEY));
         String username = RSAUtils.privateKeyDecrypt(sysUser.getUsername(), privateKey);
         String password = RSAUtils.privateKeyDecrypt(sysUser.getPassword(), privateKey);
+
+        sysUser.setSn(CommonUtils.uuid());
         sysUser.setUsername(username);
         sysUser.setPassword(passwordEncoder.encode(password));
 

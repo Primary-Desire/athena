@@ -5,6 +5,7 @@ import cn.ruiheyun.athena.admin.entity.SysUser;
 import cn.ruiheyun.athena.admin.mapper.SysUserMapper;
 import cn.ruiheyun.athena.admin.service.ISysRoleService;
 import cn.ruiheyun.athena.admin.service.ISysUserService;
+import cn.ruiheyun.athena.common.util.CommonUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,5 +42,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<SysRole> roleList = sysRoleService.listByUserSn(sysUser.getSn());
         List<GrantedAuthority> authorities = roleList.stream().map(sysRole -> new SimpleGrantedAuthority(sysRole.getName())).collect(Collectors.toList());
         return Mono.just(new User(sysUser.getUsername(), sysUser.getPassword(), authorities));
+    }
+
+    @Override
+    public boolean updateLastLoginInfo(String username, String ip) {
+        return lambdaUpdate().set(SysUser::getLastLoginIp, ip)
+                .set(SysUser::getLastLoginRegion, CommonUtils.getIpAddressRegion(ip))
+                .eq(SysUser::getUsername, username)
+                .update();
     }
 }

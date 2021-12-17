@@ -14,4 +14,6 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
  */
 public interface ISysUserService extends IService<SysUser>, ReactiveUserDetailsService {
 
+    boolean updateLastLoginInfo(String username, String ip);
+
 }

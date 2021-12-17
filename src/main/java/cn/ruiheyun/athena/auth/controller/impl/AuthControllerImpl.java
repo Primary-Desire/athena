@@ -72,7 +72,7 @@ public class AuthControllerImpl implements IAuthController {
     }
 
     @Override
-    @RequestMapping(value = {"/signUp"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/signUp"}, method = {RequestMethod.POST})
     public Object signUp(@RequestBody JSONObject requestBody) {
         SysUser sysUser = requestBody.toJavaObject(SysUser.class);
 

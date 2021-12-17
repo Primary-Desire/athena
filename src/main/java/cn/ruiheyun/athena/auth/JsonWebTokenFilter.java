@@ -1,14 +1,11 @@
 package cn.ruiheyun.athena.auth;
 
-import cn.ruiheyun.athena.common.response.JsonResult;
 import cn.ruiheyun.athena.common.util.CommonUtils;
 import cn.ruiheyun.athena.common.util.JsonWebTokenUtils;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -19,7 +16,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -43,24 +39,19 @@ public class JsonWebTokenFilter implements WebFilter {
         ServerHttpResponse response = exchange.getResponse();
         String authorization = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (StringUtils.isBlank(authorization)) {
-            return response(response, HttpStatus.UNAUTHORIZED);
+            return CommonUtils.response(response, HttpStatus.UNAUTHORIZED, "请求未携带令牌");
         }
         if (!authorization.startsWith(jsonWebTokenHeader)) {
-            return response(response, HttpStatus.FORBIDDEN);
+            return CommonUtils.response(response, HttpStatus.FORBIDDEN, "令牌格式错误");
         }
         String token = authorization.substring(jsonWebTokenHeader.length()).trim();
-
+        if (StringUtils.isBlank(token)) {
+            return CommonUtils.response(response, HttpStatus.UNAUTHORIZED, "令牌格式错误");
+        }
         if (!jsonWebTokenUtils.verificationToken(token, CommonUtils.getRealIpAddress(exchange))) {
-            return response(response, HttpStatus.UNAUTHORIZED);
+            return CommonUtils.response(response, HttpStatus.UNAUTHORIZED, "令牌已过期或IP地址不匹配");
         }
         exchange.getAttributes().put("token", token);
         return chain.filter(exchange);
-    }
-
-    private Mono<Void> response(ServerHttpResponse response, HttpStatus status) {
-        response.setStatusCode(status);
-        String responseBody = JSONObject.toJSONString(JsonResult.failed(status.getReasonPhrase()));
-        DataBuffer body = response.bufferFactory().wrap(responseBody.getBytes(StandardCharsets.UTF_8));
-        return response.writeWith(Mono.just(body));
     }
 }

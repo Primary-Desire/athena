@@ -36,7 +36,11 @@ public class JsonResult {
     }
 
     public static JsonResult failed(String msg) {
-        return response(-1, msg, null);
+        return failed(-1, msg);
+    }
+
+    public static JsonResult failed(Integer code, String msg) {
+        return response(code, msg, null);
     }
 
     public static JsonResult response(Integer code, String msg, Object data) {

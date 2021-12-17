@@ -1,10 +1,16 @@
 package cn.ruiheyun.athena.common.util;
 
 import cn.hutool.http.HttpUtil;
+import cn.ruiheyun.athena.common.response.JsonResult;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -99,5 +105,14 @@ public class CommonUtils {
         return decoder.decode(base64);
     }
 
+    public static Mono<Void> response(ServerHttpResponse response, HttpStatus status) {
+        return response(response, status, status.getReasonPhrase());
+    }
 
+    public static Mono<Void> response(ServerHttpResponse response, HttpStatus status, String msg) {
+        response.setStatusCode(status);
+        String responseBody = JSONObject.toJSONString(JsonResult.failed(msg));
+        DataBuffer body = response.bufferFactory().wrap(responseBody.getBytes(StandardCharsets.UTF_8));
+        return response.writeWith(Mono.just(body));
+    }
 }

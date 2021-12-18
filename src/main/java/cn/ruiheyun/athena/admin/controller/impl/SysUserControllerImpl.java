@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = {"/api/v1/admin/user"})
@@ -22,16 +21,6 @@ public class SysUserControllerImpl implements ISysUserController {
 
     @Resource
     private ISysUserService sysUserService;
-
-    @Override
-    @RequestMapping(value = {"/list"}, method = {RequestMethod.GET})
-    public Object listUser() {
-        List<SysUser> userList = sysUserService.lambdaQuery()
-                .select(SysUser::getId, SysUser::getSn, SysUser::getUsername, SysUser::getLastLoginIp, SysUser::getLastLoginRegion, SysUser::getStatus)
-                .list();
-        return Mono.just(userList)
-                .map(list -> JsonResult.success("查询成功", list));
-    }
 
     @Override
     @RequestMapping(value = {"/page"}, method = {RequestMethod.GET})

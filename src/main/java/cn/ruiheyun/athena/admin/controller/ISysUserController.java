@@ -1,6 +1,8 @@
 package cn.ruiheyun.athena.admin.controller;
 
-public interface ISysUserController {
+import cn.ruiheyun.athena.common.controller.IBaseController;
+
+public interface ISysUserController extends IBaseController {
 
     Object listUser();
 

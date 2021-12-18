@@ -1,6 +1,5 @@
 package cn.ruiheyun.athena.auth;
 
-import cn.ruiheyun.athena.common.util.JsonWebTokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +15,6 @@ import reactor.core.publisher.Mono;
 public class CustomServerSecurityContextRepository implements ServerSecurityContextRepository {
 
     @Autowired
-    private JsonWebTokenUtils jsonWebTokenUtils;
-    @Autowired
     private CustomReactiveAuthenticationManager customReactiveAuthenticationManager;
 
     @Override
@@ -31,6 +28,7 @@ public class CustomServerSecurityContextRepository implements ServerSecurityCont
         String token = serverWebExchange.getAttribute("token");
         return customReactiveAuthenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(token, token))
+                .onErrorResume(throwable -> Mono.empty())
                 .map(SecurityContextImpl::new);
     }
 }

@@ -2,6 +2,8 @@ package cn.ruiheyun.athena.admin.controller.impl;
 
 import cn.ruiheyun.athena.admin.controller.ISysRoleController;
 import cn.ruiheyun.athena.admin.entity.SysRole;
+import cn.ruiheyun.athena.admin.entity.SysRolePermissionRelation;
+import cn.ruiheyun.athena.admin.service.ISysRolePermissionRelationService;
 import cn.ruiheyun.athena.admin.service.ISysRoleService;
 import cn.ruiheyun.athena.common.request.PageRequestDTO;
 import cn.ruiheyun.athena.common.response.JsonResult;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = {"/api/v1/admin/role"})
@@ -20,6 +24,8 @@ public class SysRoleControllerImpl implements ISysRoleController {
 
     @Resource
     private ISysRoleService sysRoleService;
+    @Resource
+    private ISysRolePermissionRelationService sysRolePermissionRelationService;
 
     @Override
     @RequestMapping(value = {"/page"}, method = {RequestMethod.GET})
@@ -52,5 +58,23 @@ public class SysRoleControllerImpl implements ISysRoleController {
     public Object delete(@RequestParam String sn) {
         return Mono.just(sysRoleService.lambdaUpdate().set(SysRole::getDeleted, 1).eq(SysRole::getSn, sn).update())
                 .map(JsonResult::isSuccess);
+    }
+
+    @Override
+    @RequestMapping(value = {"/permission/relation/bind"}, method = {RequestMethod.POST})
+    public Object permissionRelationBind(@RequestBody JSONObject requestBody) {
+        String roleSn = requestBody.getString("roleSn");
+        String permissions = requestBody.getString("permissions");
+        sysRolePermissionRelationService.remove(sysRolePermissionRelationService.lambdaQuery().eq(SysRolePermissionRelation::getRoleSn, roleSn).getWrapper());
+        Set<SysRolePermissionRelation> permissionRelationSet = new HashSet<>();
+        for (String permissionSn : permissions.split(",")) {
+            if (StringUtils.isNoneBlank(permissionSn)) {
+                SysRolePermissionRelation permission = new SysRolePermissionRelation();
+                permission.setRoleSn(roleSn);
+                permission.setPermissionSn(permissionSn);
+                permissionRelationSet.add(permission);
+            }
+        }
+        return Mono.just(sysRolePermissionRelationService.saveBatch(permissionRelationSet)).map(JsonResult::isSuccess);
     }
 }

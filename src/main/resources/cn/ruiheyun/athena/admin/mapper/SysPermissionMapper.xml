@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.ruiheyun.athena.admin.mapper.SysPermissionMapper">
     <select id="listAllPermissionByUser" resultType="cn.ruiheyun.athena.admin.entity.SysPermission">
-        SELECT sp.*
+        SELECT sp.id, sp.sn, sp.name, sp.icon, sp.url, sp.type, sp.parent_sn
         FROM sys_permission sp
         LEFT JOIN sys_role_permission_relation srpr
         ON sp.sn = srpr.permission_sn

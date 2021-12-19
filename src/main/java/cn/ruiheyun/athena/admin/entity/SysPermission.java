@@ -91,12 +91,12 @@ public class SysPermission implements Serializable {
         Iterator<SysPermission> iterator = sysPermissionList.iterator();
         while (iterator.hasNext()) {
             SysPermission sysPermission = iterator.next();
+            iterator.remove();
             if (StringUtils.isNotBlank(sysPermission.getParentSn())) {
                 continue;
             }
             sysPermission.setChildren(getChildren(sysPermission.getSn(), sysPermissionList));
             permissionList.add(sysPermission);
-            iterator.remove();
         }
         return permissionList;
     }
@@ -106,11 +106,11 @@ public class SysPermission implements Serializable {
         Iterator<SysPermission> iterator = sysPermissionList.iterator();
         while (iterator.hasNext()) {
             SysPermission sysPermission = iterator.next();
+            iterator.remove();
             if (!sn.equals(sysPermission.getParentSn())) {
                 continue;
             }
             childrenList.add(sysPermission);
-            iterator.remove();
         }
         for (SysPermission sysPermission : childrenList) {
             sysPermission.setChildren(getChildren(sysPermission.getSn(), sysPermissionList));

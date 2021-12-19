@@ -6,6 +6,8 @@ import cn.ruiheyun.athena.admin.service.ISysPermissionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 系统菜单权限 服务实现类
@@ -17,4 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, SysPermission> implements ISysPermissionService {
 
+    @Override
+    public List<SysPermission> listAllPermissionByUser(String userSn) {
+        return baseMapper.listAllPermissionByUser(userSn);
+    }
 }

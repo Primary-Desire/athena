@@ -42,7 +42,7 @@ public class JsonWebTokenFilter implements WebFilter {
             return CommonUtils.response(response, HttpStatus.UNAUTHORIZED, "请求未携带令牌");
         }
         if (!authorization.startsWith(jsonWebTokenHeader)) {
-            return CommonUtils.response(response, HttpStatus.FORBIDDEN, "令牌格式错误");
+            return CommonUtils.response(response, HttpStatus.UNAUTHORIZED, "令牌格式错误");
         }
         String token = authorization.substring(jsonWebTokenHeader.length()).trim();
         if (StringUtils.isBlank(token)) {

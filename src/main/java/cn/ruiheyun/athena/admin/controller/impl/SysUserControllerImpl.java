@@ -3,17 +3,21 @@ package cn.ruiheyun.athena.admin.controller.impl;
 import cn.ruiheyun.athena.admin.controller.ISysUserController;
 import cn.ruiheyun.athena.admin.entity.SysUser;
 import cn.ruiheyun.athena.admin.entity.SysUserRoleRelation;
+import cn.ruiheyun.athena.admin.service.ISysPermissionService;
 import cn.ruiheyun.athena.admin.service.ISysUserRoleRelationService;
 import cn.ruiheyun.athena.admin.service.ISysUserService;
 import cn.ruiheyun.athena.common.request.PageRequestDTO;
 import cn.ruiheyun.athena.common.response.JsonResult;
+import cn.ruiheyun.athena.common.util.JsonWebTokenUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
@@ -24,8 +28,13 @@ import java.util.Set;
 @RequestMapping(value = {"/api/v1/admin/user"})
 public class SysUserControllerImpl implements ISysUserController {
 
+    @Autowired
+    private JsonWebTokenUtils jsonWebTokenUtils;
+
     @Resource
     private ISysUserService sysUserService;
+    @Resource
+    private ISysPermissionService sysPermissionService;
     @Resource
     private ISysUserRoleRelationService sysUserRoleRelationService;
 
@@ -68,5 +77,14 @@ public class SysUserControllerImpl implements ISysUserController {
             }
         }
         return Mono.just(sysUserRoleRelationService.saveBatch(userRoleRelationSet)).map(JsonResult::isSuccess);
+    }
+
+    @Override
+    @RequestMapping(value = {"/menu/list/get"}, method = {RequestMethod.GET})
+    public Object getMenuList(ServerWebExchange exchange) {
+        String username = jsonWebTokenUtils.getSubjectForToken(exchange.getAttribute("token"));
+        SysUser sysUser = sysUserService.lambdaQuery().eq(SysUser::getUsername, username).one();
+        return Mono.just(sysPermissionService.listAllPermissionByUser(sysUser.getSn()))
+                .map(permissionList -> JsonResult.success("查询成功", permissionList));
     }
 }

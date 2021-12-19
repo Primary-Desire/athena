@@ -11,10 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,6 +66,9 @@ public class JsonWebTokenUtils {
 
     public boolean verificationToken(String token, String ip) {
         Claims claims = getClaimsForToken(token);
+        if (Objects.isNull(claims)) {
+            return false;
+        }
         String tokenIp = claims.get(CLAIM_KEY_IP, String.class);
         return tokenIp.equals(ip) && !isExpire(token);
     }

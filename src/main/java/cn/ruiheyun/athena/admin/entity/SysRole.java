@@ -3,6 +3,8 @@ package cn.ruiheyun.athena.admin.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
  * @author LauHonban
  * @since 2021-12-16
  */
+@Data
 @TableName("sys_role")
 public class SysRole implements Serializable {
 
@@ -55,73 +58,4 @@ public class SysRole implements Serializable {
      */
     private LocalDateTime updateTime;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSn() {
-        return sn;
-    }
-
-    public void setSn(String sn) {
-        this.sn = sn;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "SysRole{" +
-        "id=" + id +
-        ", sn=" + sn +
-        ", name=" + name +
-        ", status=" + status +
-        ", deleted=" + deleted +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
-    }
 }

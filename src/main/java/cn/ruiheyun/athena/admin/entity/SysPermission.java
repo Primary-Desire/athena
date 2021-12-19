@@ -3,6 +3,8 @@ package cn.ruiheyun.athena.admin.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
  * @author LauHonban
  * @since 2021-12-16
  */
+@Data
 @TableName("sys_permission")
 public class SysPermission implements Serializable {
 
@@ -56,6 +59,11 @@ public class SysPermission implements Serializable {
     private String parentSn;
 
     /**
+     * 排序, 0为默认选中
+     */
+    private Integer sort;
+
+    /**
      * 是否删除: 0.未删除; 1.已删除
      */
     private Integer deleted;
@@ -70,100 +78,4 @@ public class SysPermission implements Serializable {
      */
     private LocalDateTime updateTime;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSn() {
-        return sn;
-    }
-
-    public void setSn(String sn) {
-        this.sn = sn;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public String getParentSn() {
-        return parentSn;
-    }
-
-    public void setParentSn(String parentSn) {
-        this.parentSn = parentSn;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "SysPermission{" +
-        "id=" + id +
-        ", sn=" + sn +
-        ", name=" + name +
-        ", icon=" + icon +
-        ", url=" + url +
-        ", type=" + type +
-        ", parentSn=" + parentSn +
-        ", deleted=" + deleted +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
-        "}";
-    }
 }

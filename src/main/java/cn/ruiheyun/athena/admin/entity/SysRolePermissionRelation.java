@@ -3,6 +3,8 @@ package cn.ruiheyun.athena.admin.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +15,7 @@ import java.io.Serializable;
  * @author LauHonban
  * @since 2021-12-16
  */
+@Data
 @TableName("sys_role_permission_relation")
 public class SysRolePermissionRelation implements Serializable {
 
@@ -34,37 +37,4 @@ public class SysRolePermissionRelation implements Serializable {
      */
     private String permissionSn;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRoleSn() {
-        return roleSn;
-    }
-
-    public void setRoleSn(String roleSn) {
-        this.roleSn = roleSn;
-    }
-
-    public String getPermissionSn() {
-        return permissionSn;
-    }
-
-    public void setPermissionSn(String permissionSn) {
-        this.permissionSn = permissionSn;
-    }
-
-    @Override
-    public String toString() {
-        return "SysRolePermissionRelation{" +
-        "id=" + id +
-        ", roleSn=" + roleSn +
-        ", permissionSn=" + permissionSn +
-        "}";
-    }
 }

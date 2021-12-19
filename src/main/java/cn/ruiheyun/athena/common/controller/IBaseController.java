@@ -12,13 +12,6 @@ public interface IBaseController {
     Object page(JSONObject requestBody);
 
     /**
-     * 获取详细
-     * @param sn
-     * @return
-     */
-    Object info(String sn);
-
-    /**
      * 保存
      * @param requestBody
      * @return

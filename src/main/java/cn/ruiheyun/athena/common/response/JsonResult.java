@@ -20,7 +20,7 @@ public class JsonResult {
     }
 
     public static JsonResult success() {
-        return success("成功");
+        return success("保存成功");
     }
 
     public static JsonResult success(String msg) {
@@ -32,7 +32,7 @@ public class JsonResult {
     }
 
     public static JsonResult failed() {
-        return failed("失败");
+        return failed("保存失败");
     }
 
     public static JsonResult failed(String msg) {

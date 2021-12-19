@@ -30,18 +30,11 @@ public class SysUserControllerImpl implements ISysUserController {
                 .select(SysUser::getId, SysUser::getSn, SysUser::getUsername, SysUser::getLastLoginIp, SysUser::getLastLoginRegion, SysUser::getStatus)
                 .like(SysUser::getUsername, pageRequestDTO.getKeyword())
                 .page(Page.of(pageRequestDTO.getCurrent(), pageRequestDTO.getPageSize()));
-        return Mono.just(userPage)
-                .map(pageData -> JsonResult.success("查询成功", pageData));
+        return Mono.just(userPage).map(pageData -> JsonResult.success("查询成功", pageData));
     }
 
     @Override
-    @RequestMapping(value = {"/info"}, method = {RequestMethod.GET})
-    public Object info(String sn) {
-        return null;
-    }
-
-    @Override
-    @RequestMapping(value = {"/save"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/update"}, method = {RequestMethod.POST})
     public Object save(@RequestBody JSONObject requestBody) {
         return null;
     }

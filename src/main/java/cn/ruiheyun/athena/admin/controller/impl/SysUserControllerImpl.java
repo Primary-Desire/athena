@@ -1,6 +1,7 @@
 package cn.ruiheyun.athena.admin.controller.impl;
 
 import cn.ruiheyun.athena.admin.controller.ISysUserController;
+import cn.ruiheyun.athena.admin.entity.SysPermission;
 import cn.ruiheyun.athena.admin.entity.SysUser;
 import cn.ruiheyun.athena.admin.entity.SysUserRoleRelation;
 import cn.ruiheyun.athena.admin.service.ISysPermissionService;
@@ -84,7 +85,7 @@ public class SysUserControllerImpl implements ISysUserController {
     public Object getMenuList(ServerWebExchange exchange) {
         String username = jsonWebTokenUtils.getSubjectForToken(exchange.getAttribute("token"));
         SysUser sysUser = sysUserService.lambdaQuery().eq(SysUser::getUsername, username).one();
-        return Mono.just(sysPermissionService.listAllPermissionByUser(sysUser.getSn()))
-                .map(permissionList -> JsonResult.success("查询成功", permissionList));
+        return Mono.just(SysPermission.convertToTree(sysPermissionService.listAllPermissionByUser(sysUser.getSn())))
+                .map(sysPermissionList -> JsonResult.success("查询成功", sysPermissionList));
     }
 }

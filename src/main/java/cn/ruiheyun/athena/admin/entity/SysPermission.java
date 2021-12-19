@@ -1,12 +1,17 @@
 package cn.ruiheyun.athena.admin.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * <p>
@@ -77,5 +82,40 @@ public class SysPermission implements Serializable {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    @TableField(exist = false)
+    private List<SysPermission> children;
+
+    public static List<SysPermission> convertToTree(List<SysPermission> sysPermissionList) {
+        List<SysPermission> permissionList = new ArrayList<>();
+        Iterator<SysPermission> iterator = sysPermissionList.iterator();
+        while (iterator.hasNext()) {
+            SysPermission sysPermission = iterator.next();
+            if (StringUtils.isNotBlank(sysPermission.getParentSn())) {
+                continue;
+            }
+            sysPermission.setChildren(getChildren(sysPermission.getSn(), sysPermissionList));
+            permissionList.add(sysPermission);
+            iterator.remove();
+        }
+        return permissionList;
+    }
+
+    private static List<SysPermission> getChildren(String sn, List<SysPermission> sysPermissionList) {
+        List<SysPermission> childrenList = new ArrayList<>();
+        Iterator<SysPermission> iterator = sysPermissionList.iterator();
+        while (iterator.hasNext()) {
+            SysPermission sysPermission = iterator.next();
+            if (!sn.equals(sysPermission.getParentSn())) {
+                continue;
+            }
+            childrenList.add(sysPermission);
+            iterator.remove();
+        }
+        for (SysPermission sysPermission : childrenList) {
+            sysPermission.setChildren(getChildren(sysPermission.getSn(), sysPermissionList));
+        }
+        return childrenList;
+    }
 
 }

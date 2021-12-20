@@ -112,6 +112,7 @@ public class CommonUtils {
     public static Mono<Void> response(ServerHttpResponse response, HttpStatus status, String msg) {
         response.setStatusCode(status);
         String responseBody = JSONObject.toJSONString(JsonResult.failed(msg));
+        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         DataBuffer body = response.bufferFactory().wrap(responseBody.getBytes(StandardCharsets.UTF_8));
         return response.writeWith(Mono.just(body));
     }

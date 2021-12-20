@@ -22,7 +22,7 @@ public class SysPermissionControllerImpl implements ISysPermissionController {
     private ISysPermissionService sysPermissionService;
 
     @Override
-    @RequestMapping(value = {"/page"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/page"})
     public Object page(@RequestBody JSONObject requestBody) {
         PageRequestDTO pageRequestDTO = requestBody.toJavaObject(PageRequestDTO.class);
         Page<SysPermission> permissionPage = sysPermissionService.lambdaQuery()
@@ -35,7 +35,7 @@ public class SysPermissionControllerImpl implements ISysPermissionController {
     }
 
     @Override
-    @RequestMapping(value = {"/save"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/save"})
     public Object save(@RequestBody JSONObject requestBody) {
         SysPermission permission = requestBody.toJavaObject(SysPermission.class);
         return Mono.just(permission).map(sysPermission -> {
@@ -54,7 +54,7 @@ public class SysPermissionControllerImpl implements ISysPermissionController {
     }
 
     @Override
-    @RequestMapping(value = {"/delete"}, method = {RequestMethod.DELETE})
+    @RequestMapping(value = {"/delete"})
     public Object delete(@RequestParam String sn) {
         return Mono.just(sysPermissionService.lambdaUpdate().set(SysPermission::getDeleted, 1).update())
                 .map(JsonResult::isSuccess);

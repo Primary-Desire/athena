@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -40,7 +39,7 @@ public class SysUserControllerImpl implements ISysUserController {
     private ISysUserRoleRelationService sysUserRoleRelationService;
 
     @Override
-    @RequestMapping(value = {"/page"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/page"})
     public Object page(@RequestBody JSONObject requestBody) {
         PageRequestDTO pageRequestDTO = requestBody.toJavaObject(PageRequestDTO.class);
         Page<SysUser> userPage = sysUserService.lambdaQuery()
@@ -51,19 +50,19 @@ public class SysUserControllerImpl implements ISysUserController {
     }
 
     @Override
-    @RequestMapping(value = {"/update"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/update"})
     public Object save(@RequestBody JSONObject requestBody) {
         return null;
     }
 
     @Override
-    @RequestMapping(value = {"/delete"}, method = {RequestMethod.DELETE})
+    @RequestMapping(value = {"/delete"})
     public Object delete(String sn) {
         return null;
     }
 
     @Override
-    @RequestMapping(value = {"/role/relation/bind"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/role/relation/bind"})
     public Object roleRelationBind(@RequestBody JSONObject requestBody) {
         String userSn = requestBody.getString("userSn");
         String roles = requestBody.getString("roles");
@@ -81,7 +80,7 @@ public class SysUserControllerImpl implements ISysUserController {
     }
 
     @Override
-    @RequestMapping(value = {"/menu/list/get"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/menu/list/get"})
     public Object getMenuList(ServerWebExchange exchange) {
         String username = jsonWebTokenUtils.getSubjectForToken(exchange.getAttribute("token"));
         SysUser sysUser = sysUserService.lambdaQuery().eq(SysUser::getUsername, username).one();

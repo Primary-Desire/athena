@@ -28,7 +28,7 @@ public class SysRoleControllerImpl implements ISysRoleController {
     private ISysRolePermissionRelationService sysRolePermissionRelationService;
 
     @Override
-    @RequestMapping(value = {"/page"}, method = {RequestMethod.GET})
+    @RequestMapping(value = {"/page"})
     public Object page(@RequestBody JSONObject requestBody) {
         PageRequestDTO pageRequestDTO = requestBody.toJavaObject(PageRequestDTO.class);
         Page<SysRole> rolePage = sysRoleService.lambdaQuery()
@@ -39,7 +39,7 @@ public class SysRoleControllerImpl implements ISysRoleController {
     }
 
     @Override
-    @RequestMapping(value = {"/save"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/save"})
     public Object save(@RequestBody JSONObject requestBody) {
         SysRole saveRole = requestBody.toJavaObject(SysRole.class);
         return Mono.just(saveRole).map(sysRole -> {
@@ -54,14 +54,14 @@ public class SysRoleControllerImpl implements ISysRoleController {
     }
 
     @Override
-    @RequestMapping(value = {"/delete"}, method = {RequestMethod.DELETE})
+    @RequestMapping(value = {"/delete"})
     public Object delete(@RequestParam String sn) {
         return Mono.just(sysRoleService.lambdaUpdate().set(SysRole::getDeleted, 1).eq(SysRole::getSn, sn).update())
                 .map(JsonResult::isSuccess);
     }
 
     @Override
-    @RequestMapping(value = {"/permission/relation/bind"}, method = {RequestMethod.POST})
+    @RequestMapping(value = {"/permission/relation/bind"})
     public Object permissionRelationBind(@RequestBody JSONObject requestBody) {
         String roleSn = requestBody.getString("roleSn");
         String permissions = requestBody.getString("permissions");

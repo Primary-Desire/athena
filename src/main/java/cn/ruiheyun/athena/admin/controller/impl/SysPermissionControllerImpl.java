@@ -7,9 +7,11 @@ import cn.ruiheyun.athena.common.request.PageRequestDTO;
 import cn.ruiheyun.athena.common.response.JsonResult;
 import cn.ruiheyun.athena.common.util.CommonUtils;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
@@ -24,14 +26,8 @@ public class SysPermissionControllerImpl implements ISysPermissionController {
     @Override
     @RequestMapping(value = {"/page"})
     public Object page(@RequestBody JSONObject requestBody) {
-        PageRequestDTO pageRequestDTO = requestBody.toJavaObject(PageRequestDTO.class);
-        Page<SysPermission> permissionPage = sysPermissionService.lambdaQuery()
-                .select(SysPermission::getId, SysPermission::getSn, SysPermission::getName, SysPermission::getIcon,
-                        SysPermission::getUrl, SysPermission::getParentSn, SysPermission::getType)
-                .like(SysPermission::getName, pageRequestDTO.getKeyword())
-                .or().like(SysPermission::getUrl, pageRequestDTO.getKeyword())
-                .page(Page.of(pageRequestDTO.getCurrent(), pageRequestDTO.getPageSize()));
-        return Mono.just(permissionPage).map(pageData -> JsonResult.success("查询成功", pageData));
+        return Mono.just(sysPermissionService.pagePermission(requestBody.toJavaObject(PageRequestDTO.class)))
+                .map(pageData -> JsonResult.success("查询成功", pageData));
     }
 
     @Override

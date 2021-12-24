@@ -1,5 +1,6 @@
 package cn.ruiheyun.athena.admin.entity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -9,9 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -116,6 +115,29 @@ public class SysPermission implements Serializable {
             sysPermission.setChildren(getChildren(sysPermission.getSn(), sysPermissionList));
         }
         return childrenList;
+    }
+
+    public static JSONObject getDefaultKeys(List<SysPermission> permissionList) {
+        Set<String> defaultOpenKeys = new LinkedHashSet<>();
+        Set<String> defaultSelectedKeys = new LinkedHashSet<>();
+        setDefaultKeys(permissionList, defaultOpenKeys, defaultSelectedKeys);
+        JSONObject result = new JSONObject();
+        result.put("defaultOpenKeys", defaultOpenKeys);
+        result.put("defaultSelectedKeys", defaultSelectedKeys);
+        return result;
+    }
+
+    private static void setDefaultKeys(List<SysPermission> permissionList, Set<String> defaultOpenKeys, Set<String> defaultSelectedKeys) {
+        for (SysPermission permission : permissionList) {
+            if (!permission.children.isEmpty()) {
+                defaultOpenKeys.add(String.valueOf(permission.getId()));
+                setDefaultKeys(permission.children, defaultOpenKeys, defaultSelectedKeys);
+            } else {
+                if (defaultSelectedKeys.isEmpty()) {
+                    defaultSelectedKeys.add(String.valueOf(permission.getId()));
+                }
+            }
+        }
     }
 
 }

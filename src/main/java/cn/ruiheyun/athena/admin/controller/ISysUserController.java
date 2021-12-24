@@ -10,4 +10,6 @@ public interface ISysUserController extends IBaseController {
 
     Object getMenuList(ServerWebExchange exchange);
 
+    Object getDefaultKeys(ServerWebExchange exchange);
+
 }

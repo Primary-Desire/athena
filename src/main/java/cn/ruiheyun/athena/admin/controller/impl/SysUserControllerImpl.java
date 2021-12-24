@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -86,5 +87,15 @@ public class SysUserControllerImpl implements ISysUserController {
         SysUser sysUser = sysUserService.lambdaQuery().eq(SysUser::getUsername, username).one();
         return Mono.just(SysPermission.convertToTree(sysPermissionService.listAllPermissionByUser(sysUser.getSn())))
                 .map(sysPermissionList -> JsonResult.success("查询成功", sysPermissionList));
+    }
+
+    @Override
+    @RequestMapping(value = {"/default/open/selected/keys"})
+    public Object getDefaultKeys(ServerWebExchange exchange) {
+        String username = jsonWebTokenUtils.getSubjectForToken(exchange.getAttribute("token"));
+        SysUser sysUser = sysUserService.lambdaQuery().eq(SysUser::getUsername, username).one();
+        List<SysPermission> permissionList = SysPermission.convertToTree(sysPermissionService.listAllPermissionByUser(sysUser.getSn()));
+        return Mono.just(SysPermission.getDefaultKeys(permissionList))
+                .map(result -> JsonResult.success("查询成功", result));
     }
 }

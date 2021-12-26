@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class SysUserServiceImpl implements ISysUserService {
@@ -27,7 +28,10 @@ public class SysUserServiceImpl implements ISysUserService {
     public Mono<UserDetails> findByUsername(String s) {
         Mono<SysUser> sysUserMono = sysUserRepository.findByUsername(s).switchIfEmpty(sysUserRepository.findByEmail(s));
         return sysUserMono.zipWith(sysUserMono.flatMap(sysUser -> sysRoleService.findByUserSn(sysUser.getSn()).collectList()), (sysUser, sysRoleList) -> {
-            List<GrantedAuthority> roleNameList = sysRoleList.stream().map(sysRole -> new SimpleGrantedAuthority(sysRole.getName())).collect(Collectors.toList());
+            Set<GrantedAuthority> roleNameList = new LinkedHashSet<>();
+            if (!Objects.isNull(sysRoleList) && !sysRoleList.isEmpty()) {
+                sysRoleList.forEach(sysRole -> roleNameList.add(new SimpleGrantedAuthority(sysRole.getName())));
+            }
             return new User(sysUser.getUsername(), sysUser.getPassword(), roleNameList);
         });
     }

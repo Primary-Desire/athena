@@ -1,6 +1,7 @@
 package cn.ruiheyun.athena.auth.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.web.server.ServerWebExchange;
 
 public interface IAuthController {
 
@@ -8,6 +9,6 @@ public interface IAuthController {
 
     Object signUp(JSONObject requestBody);
 
-    Object signIn(JSONObject requestBody);
+    Object signIn(JSONObject requestBody, ServerWebExchange exchange);
 
 }

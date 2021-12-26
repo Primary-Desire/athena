@@ -1,4 +1,4 @@
-package cn.ruiheyun.athena.common.auth;
+package cn.ruiheyun.athena.auth;
 
 import cn.ruiheyun.athena.common.util.JsonWebTokenUtils;
 import lombok.extern.slf4j.Slf4j;

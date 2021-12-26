@@ -1,7 +1,7 @@
-package cn.ruiheyun.athena.common.configuration;
+package cn.ruiheyun.athena.configuration;
 
-import cn.ruiheyun.athena.common.auth.CustomServerSecurityContextRepository;
-import cn.ruiheyun.athena.common.filter.AuthFilter;
+import cn.ruiheyun.athena.auth.CustomServerSecurityContextRepository;
+import cn.ruiheyun.athena.filter.AuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

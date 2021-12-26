@@ -1,4 +1,4 @@
-package cn.ruiheyun.athena.common.filter;
+package cn.ruiheyun.athena.filter;
 
 import cn.ruiheyun.athena.common.util.CommonUtils;
 import cn.ruiheyun.athena.common.util.JsonWebTokenUtils;

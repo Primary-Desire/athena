@@ -1,4 +1,4 @@
-package cn.ruiheyun.athena.common.configuration;
+package cn.ruiheyun.athena.configuration;
 
 import cn.ruiheyun.athena.common.entity.AbstractEntity;
 import cn.ruiheyun.athena.common.util.CommonUtils;

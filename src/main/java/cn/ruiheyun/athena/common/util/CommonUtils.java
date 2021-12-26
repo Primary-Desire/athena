@@ -106,10 +106,6 @@ public class CommonUtils {
         return decoder.decode(base64);
     }
 
-    public static Mono<Void> response(ServerHttpResponse response, HttpStatus status) {
-        return response(response, status, status.getReasonPhrase());
-    }
-
     public static Mono<Void> response(ServerHttpResponse response, HttpStatus status, String msg) {
         response.setStatusCode(status);
         String responseBody = JSONObject.toJSONString(JsonResult.failed(msg));

@@ -1,4 +1,4 @@
-package cn.ruiheyun.athena.common.auth;
+package cn.ruiheyun.athena.auth;
 
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;

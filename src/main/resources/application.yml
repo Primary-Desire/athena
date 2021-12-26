@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: Athena
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      authentication-database: admin
+      database: Athena
+      username: root
+      password: Share@2498
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: Share@2498
+    database: 0
+logging:
+  level:
+    org.springframework.data.mongodb.core: debug
+    org.springframework.data.mongodb.repository: debug

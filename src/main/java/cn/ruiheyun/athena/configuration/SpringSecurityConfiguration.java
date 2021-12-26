@@ -1,7 +1,9 @@
 package cn.ruiheyun.athena.configuration;
 
 import cn.ruiheyun.athena.auth.CustomServerSecurityContextRepository;
+import cn.ruiheyun.athena.auth.service.IRSAKeyService;
 import cn.ruiheyun.athena.filter.AuthFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+import javax.annotation.Resource;
+
 @Configuration
 public class SpringSecurityConfiguration {
 
@@ -20,9 +24,20 @@ public class SpringSecurityConfiguration {
     @Autowired
     private CustomServerSecurityContextRepository customServerSecurityContextRepository;
 
+    @Resource
+    private IRSAKeyService keyService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public void initializationKey() {
+        keyService.findKey()
+                .filter(key -> StringUtils.isNotBlank(key.getPrivateKey()) && StringUtils.isNotBlank(key.getPublicKey()))
+                .switchIfEmpty(keyService.saveKey())
+                .subscribe();
     }
 
     @Bean

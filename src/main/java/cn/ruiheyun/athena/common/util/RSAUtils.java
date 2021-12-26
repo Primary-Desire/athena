@@ -17,8 +17,8 @@ import java.security.spec.X509EncodedKeySpec;
 @Slf4j
 public class RSAUtils {
 
-    public static final String PUBLIC_KEY = "PublicKey";
-    public static final String PRIVATE_KEY = "PrivateKey";
+    public static final String PUBLIC_KEY = "ATHENA_PUBLIC_KEY";
+    public static final String PRIVATE_KEY = "ATHENA_PRIVATE_KEY";
 
     /**
      * 获取密钥对(初始化密钥对)

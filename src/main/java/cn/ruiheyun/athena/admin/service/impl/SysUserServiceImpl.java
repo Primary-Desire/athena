@@ -31,4 +31,18 @@ public class SysUserServiceImpl implements ISysUserService {
             return new User(sysUser.getUsername(), sysUser.getPassword(), roleNameList);
         });
     }
+
+    @Override
+    public Mono<SysUser> findByEmail(String email) {
+        return sysUserRepository.findByEmail(email);
+    }
+
+    @Override
+    public Mono<SysUser> save(SysUser sysUser) {
+        return sysUserRepository.findByUsername(sysUser.getUsername())
+                .switchIfEmpty(sysUserRepository.findByEmail(sysUser.getEmail()))
+                .doOnNext(user -> {
+                    throw new RuntimeException("用户名重复或用户邮箱已注册!");
+                }).switchIfEmpty(sysUserRepository.save(sysUser));
+    }
 }

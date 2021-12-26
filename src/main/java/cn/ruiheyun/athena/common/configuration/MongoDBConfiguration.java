@@ -35,7 +35,12 @@ public class MongoDBConfiguration {
                         ((AbstractEntity) entity).setUpdater(username);
                     }
                     return entity;
-                }).defaultIfEmpty(entity);
+                }).defaultIfEmpty(entity).map(object -> {
+                    if (StringUtils.isBlank(((AbstractEntity) object).getSn())) {
+                        ((AbstractEntity) object).setSn(CommonUtils.uuid());
+                    }
+                    return entity;
+                });
     }
 
 }

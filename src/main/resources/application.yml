@@ -5,10 +5,10 @@ spring:
     name: Athena
   data:
     mongodb:
-      host: 127.0.0.1
-      port: 27017
       authentication-database: admin
       database: Athena
+      host: 127.0.0.1
+      port: 27017
       username: root
       password: Share@2498
   redis:
@@ -20,3 +20,7 @@ logging:
   level:
     org.springframework.data.mongodb.core: debug
     org.springframework.data.mongodb.repository: debug
+jwt:
+  secret: TGF1SG9uYmFu
+  expiration: 3600
+  header: Bearer

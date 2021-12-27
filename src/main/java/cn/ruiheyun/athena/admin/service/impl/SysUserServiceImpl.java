@@ -13,8 +13,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
 
 @Service
 public class SysUserServiceImpl implements ISysUserService {
@@ -26,14 +24,10 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Override
     public Mono<UserDetails> findByUsername(String s) {
-        Mono<SysUser> sysUserMono = sysUserRepository.findByUsername(s).switchIfEmpty(sysUserRepository.findByEmail(s));
-        return sysUserMono.zipWith(sysUserMono.flatMap(sysUser -> sysRoleService.findByUserSn(sysUser.getSn()).collectList()), (sysUser, sysRoleList) -> {
-            Set<GrantedAuthority> roleNameList = new LinkedHashSet<>();
-            if (!Objects.isNull(sysRoleList) && !sysRoleList.isEmpty()) {
-                sysRoleList.forEach(sysRole -> roleNameList.add(new SimpleGrantedAuthority(sysRole.getName())));
-            }
-            return new User(sysUser.getUsername(), sysUser.getPassword(), roleNameList);
-        });
+        Mono<SysUser> sysUserMono = findUser(s);
+        return sysUserMono.zipWith(sysUserMono.flatMap(sysUser -> sysRoleService.findByUserSn(sysUser.getSn())
+                .collect(LinkedHashSet<GrantedAuthority>::new, (authorities, sysRole) -> authorities.add(new SimpleGrantedAuthority(sysRole.getName())))),
+                (sysUser, authorities) -> new User(sysUser.getUsername(), sysUser.getPassword(), authorities));
     }
 
     @Override
@@ -42,9 +36,15 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     @Override
+    public Mono<SysUser> findUser(String account) {
+        return sysUserRepository.findByUsername(account).switchIfEmpty(sysUserRepository.findByEmail(account));
+    }
+
+    @Override
     public Mono<SysUser> save(SysUser sysUser) {
         return sysUserRepository.findByUsername(sysUser.getUsername())
                 .switchIfEmpty(sysUserRepository.findByEmail(sysUser.getEmail()))
+                .onErrorResume(throwable -> Mono.empty())
                 .doOnNext(user -> {
                     throw new RuntimeException("用户名重复或用户邮箱已注册!");
                 }).switchIfEmpty(sysUserRepository.save(sysUser));

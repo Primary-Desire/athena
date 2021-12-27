@@ -8,6 +8,8 @@ public interface ISysUserService extends ReactiveUserDetailsService {
 
     Mono<SysUser> findByEmail(String email);
 
+    Mono<SysUser> findUser(String account);
+
     Mono<SysUser> save(SysUser sysUser);
 
 }

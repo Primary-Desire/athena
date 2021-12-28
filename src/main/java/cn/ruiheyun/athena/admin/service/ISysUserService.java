@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 
 public interface ISysUserService extends ReactiveUserDetailsService {
 
-    Mono<SysUser> findByEmail(String email);
+    Mono<SysUser> findUserByUsername(String username);
 
     Mono<SysUser> findUser(String account);
 

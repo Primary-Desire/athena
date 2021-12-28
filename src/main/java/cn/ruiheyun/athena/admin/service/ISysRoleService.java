@@ -10,4 +10,6 @@ public interface ISysRoleService {
 
     Flux<SysRole> findByUserSn(String userSn);
 
+    Mono<SysRole> save(SysRole sysRole);
+
 }

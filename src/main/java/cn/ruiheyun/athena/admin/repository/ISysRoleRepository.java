@@ -10,4 +10,6 @@ public interface ISysRoleRepository extends ReactiveMongoRepository<SysRole, Str
 
     Mono<SysRole> findBySn(String sn);
 
+    Mono<SysRole> findByName(String name);
+
 }

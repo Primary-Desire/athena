@@ -31,8 +31,8 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     @Override
-    public Mono<SysUser> findByEmail(String email) {
-        return sysUserRepository.findByEmail(email);
+    public Mono<SysUser> findUserByUsername(String username) {
+        return sysUserRepository.findByUsername(username);
     }
 
     @Override
@@ -43,10 +43,8 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public Mono<SysUser> save(SysUser sysUser) {
         return sysUserRepository.findByUsername(sysUser.getUsername())
-                .switchIfEmpty(sysUserRepository.findByEmail(sysUser.getEmail()))
-                .onErrorResume(throwable -> Mono.empty())
                 .doOnNext(user -> {
-                    throw new RuntimeException("用户名重复或用户邮箱已注册!");
+                    throw new RuntimeException("用户名已存在!");
                 }).switchIfEmpty(sysUserRepository.save(sysUser));
     }
 }
